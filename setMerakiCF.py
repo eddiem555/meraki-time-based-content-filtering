@@ -53,7 +53,7 @@ def set_CF (policy):
 
   if policy == 'work':
     payload = WorkTime_CF
-  else:Dlicy == 'play':
+  else:
     payload = PlayTime_CF
 
   headers = {
