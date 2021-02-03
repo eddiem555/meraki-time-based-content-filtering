@@ -21,7 +21,8 @@ source venv/bin/activate
 
 pip install requests
 ```
-3. Insert your Meraki API Key & Network ID in setMeraki.py code, use existing MERAKI_API_KEY and MERAKI_NET_ID constant variables.
+3. Insert your Meraki API Key & Network ID in setMerakiCF.py code, use existing MERAKI_API_KEY and MERAKI_NET_ID constant variables.
+4. Optionally, use the provided crontab-sample.txt to modify your crontab to call setMerakiCF.py from the Linux cron scheduler.
 
 ## USAGE
 
