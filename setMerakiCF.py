@@ -49,7 +49,11 @@ def get_All_CF_Categories ():
       "Accept": "application/json",
       "X-Cisco-Meraki-API-Key": MERAKI_API_KEY
   }
-  response = requests.request('GET', url, headers=headers, data=payload)
+  try:
+    response = requests.request('GET', url, headers=headers, data=payload)
+  except:
+    response.raise_for_status()
+
   obj = json.loads(response.text.encode('utf8'))
   for cat in obj["categories"]:
     print ("Name: {}, ID: {}".format(cat["name"], cat["id"]))
@@ -67,7 +71,11 @@ def get_CF ():
       "Accept": "application/json",
       "X-Cisco-Meraki-API-Key": MERAKI_API_KEY
   }
-  response = requests.request('GET', url, headers=headers, data=payload)
+  try:
+    response = requests.request('GET', url, headers=headers, data=payload)
+  except:
+    response.raise_for_status()
+
   obj = json.loads(response.text.encode('utf8'))
   for cat in obj["blockedUrlCategories"]:
     print ("Name: {}, ID: {}".format(cat["name"], cat["id"]))
@@ -100,7 +108,10 @@ def set_CF (policy):
       "X-Cisco-Meraki-API-Key": MERAKI_API_KEY
   }
 
-  response = requests.request('PUT', url, headers=headers, data=payload)
+  try:
+    response = requests.request('PUT', url, headers=headers, data=payload)
+  except:
+    response.raise_for_status()
 
 ######################################################################
 # MAIN
