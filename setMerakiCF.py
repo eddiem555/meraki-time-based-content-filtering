@@ -41,7 +41,7 @@ WorkTime_CF = {
 # Utility function to get all available Content Filtering Categories 
 #########################################################################
 def get_All_CF_Categories ():
-  url = "https://api.meraki.com/api/v0/networks/{}/contentFiltering/categories".format(MERAKI_NET_ID)
+  url = "https://api.meraki.com/api/v1/networks/{}/appliance/contentFiltering/categories".format(MERAKI_NET_ID)
   payload = None
 
   headers = {
