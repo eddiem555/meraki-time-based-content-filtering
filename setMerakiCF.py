@@ -3,7 +3,7 @@
 """
 Description: Set global Meraki Content Filter Policy based on argument passed in
 Author:      eddiem@cisco.com
-License:     Copyright (c) 2021 Cisco and/or its affiliates.
+License:     Copyright (c) 2025 Cisco and/or its affiliates.
              This software is licensed to you under the terms of the Cisco Sample
              Code License, Version 1.1 (the "License"). You may obtain a copy of the
              License at https://developer.cisco.com/docs/licenses
@@ -24,18 +24,19 @@ import json
 MERAKI_API_KEY = ""
 MERAKI_NET_ID = ""
 
-# Sample Play time blocked categories (11 - Adult, 27 - Gambling)
-PlayTime_CF = {
-               "blockedUrlCategories":["meraki:contentFiltering/category/11",
-                                       "meraki:contentFiltering/category/27"]
-              }
+# Playload to clear all Content Filtering Categories
+Clear_CF = { "blockedUrlCategories": [] }
 
-# Sample Work time blocked categories (11 - Adult, 27 - Gambling, 34 - Games)
-WorkTime_CF = {
-               "blockedUrlCategories":["meraki:contentFiltering/category/11",
-                                       "meraki:contentFiltering/category/27",
-                                       "meraki:contentFiltering/category/34"]
-              }
+# Sample Play time blocked categories (C6 - Adult, C49 - Gambling)
+PlayTime_CF = { "blockedUrlCategories": [
+                  "meraki:contentFiltering/category/C6",
+                  "meraki:contentFiltering/category/C49" ] }
+
+# Sample Work time blocked categories (C6 - Adult, C49 - Gambling, C7 - Games)
+WorkTime_CF = { "blockedUrlCategories": [
+                  "meraki:contentFiltering/category/C6",
+                  "meraki:contentFiltering/category/C49",
+                  "meraki:contentFiltering/category/C7" ] }
 
 #########################################################################
 # Utility function to get all available Content Filtering Categories 
@@ -58,7 +59,6 @@ def get_All_CF_Categories ():
   for cat in obj["categories"]:
     print ("Name: {}, ID: {}".format(cat["name"], cat["id"]))
 
-
 #########################################################################
 # Get existing Content Filtering policy and print
 #########################################################################
@@ -76,6 +76,8 @@ def get_CF ():
   except:
     response.raise_for_status()
 
+  # print ("RAW JSON: " + json.dumps(response.json(), indent=2))
+
   obj = json.loads(response.text.encode('utf8'))
   for cat in obj["blockedUrlCategories"]:
     print ("Name: {}, ID: {}".format(cat["name"], cat["id"]))
@@ -85,22 +87,27 @@ def get_CF ():
 #########################################################################
 def usage ():
   print("Usage: setMerakiCF.py [ work | play | printallcategories | printpolicy ]")
-  print("       work: Set content filtering policy for work hours")
-  print("       play: Set content filtering policy for non-work hours")
+  print("       work:  Set content filtering policy for work hours")
+  print("       play:  Set content filtering policy for non-work hours")
+  print("       clear: Clear all content filtering policies")
   print("       printallcategories: Prints all content filtering category names & IDs")
   print("       printpolicy: Prints blocked categories in your content filtering policy")
-  print("")       
+  print("")
   sys.exit()
- 
+
 #########################################################################
 # Set Content Filtering policy
 #########################################################################
 def set_CF (policy):
   url = "https://api.meraki.com/api/v1/networks/{}/appliance/contentFiltering".format(MERAKI_NET_ID)
 
-  payload = json.dumps(WorkTime_CF)
+  payload = json.dumps(Clear_CF)
+
   if policy == 'play':
     payload = json.dumps(PlayTime_CF)
+
+  if policy == 'work':
+    payload = json.dumps(WorkTime_CF)
 
   headers = {
       "Content-Type": "application/json",
@@ -120,9 +127,9 @@ if __name__ == "__main__":
 
   if len(sys.argv) != 2:
     usage()
-        
+
   arg = sys.argv[1]
-  if ((arg != "work") and (arg != "play") and (arg != "printallcategories") and (arg != "printpolicy")):
+  if ((arg != "clear") and (arg != "work") and (arg != "play") and (arg != "printallcategories") and (arg != "printpolicy")):
     usage()
 
   if ((not MERAKI_API_KEY) or (not MERAKI_NET_ID)):
