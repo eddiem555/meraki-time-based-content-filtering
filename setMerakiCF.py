@@ -83,7 +83,7 @@ def get_CF ():
     print ("Name: {}, ID: {}".format(cat["name"], cat["id"]))
 
 #########################################################################
-# Set Content Filtering policy
+# Print Usage
 #########################################################################
 def usage ():
   print("Usage: setMerakiCF.py [ work | play | printallcategories | printpolicy ]")
